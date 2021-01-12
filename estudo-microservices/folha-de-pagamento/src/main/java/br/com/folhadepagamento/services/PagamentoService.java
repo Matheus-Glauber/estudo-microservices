@@ -10,24 +10,21 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.folhadepagamento.entities.Pagamento;
 import br.com.folhadepagamento.entities.Trabalhador;
+import br.com.folhadepagamento.feignclients.TrabalhadorFeignClients;
 
 @Service
 public class PagamentoService {
 	
 	private static final String GETTRABALHADORID= "/trabalhadores/{id}";
 	
-	@Value("${rh-trabalhadores.host}")
-	private String trabalhadorHost;
-	
 	@Autowired
-	RestTemplate restTemplate;
+	private TrabalhadorFeignClients trabalhadorFeignClients;
 	
 	public Pagamento getPagamento(Long trabalhadorId, Integer diasTrabalhados) {
-		Map<String, String> uriVariables = new HashMap<>();
-		uriVariables.put("id", trabalhadorId.toString());
 		
-		Trabalhador trabalhador = restTemplate.getForObject(trabalhadorHost + GETTRABALHADORID, Trabalhador.class, uriVariables);
 		
+		Trabalhador trabalhador = trabalhadorFeignClients.buscarTrabalhadorPorId(trabalhadorId).getBody();
+				
 		return new Pagamento(trabalhador.getNome(), trabalhador.getDiaria(), diasTrabalhados);
 	}
 
