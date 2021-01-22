@@ -11,7 +11,6 @@ import br.com.folhadepagamento.entities.Trabalhador;
 @Component
 @FeignClient(
 		name = "rh-trabalhadores",
-		url = "localhost:8095",
 		path = "/trabalhadores")
 public interface TrabalhadorFeignClients {
 	
